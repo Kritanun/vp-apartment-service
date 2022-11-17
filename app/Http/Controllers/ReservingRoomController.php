@@ -3,10 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Models\Room;
+use App\Models\User;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller as Controller;
 use Illuminate\Http\UploadedFile;
+use App\Http\Controllers\MailController;
 
 class ReservingRoomController extends Controller
 {
@@ -138,6 +140,19 @@ class ReservingRoomController extends Controller
         // $item->reserving_image = $laravel_save_path;
         $item->save();
 
+        $mailData = Room::leftJoin('user','user.user_id','=','room.user_id')
+                        ->where('room.room_id',$id)
+                        ->first();
+
+        $mail = new MailController();
+        $userAdmins = \App\Models\User::whereIsAdmin(1)->get();
+
+        foreach($userAdmins as $user){
+            if($user->email != null){
+                $mail->send_mail_reserv($user->email,$mailData);
+            }
+        }
+
         return response()->json(["message" => "Successful"],200);
     }
 
@@ -219,6 +234,18 @@ class ReservingRoomController extends Controller
         $item->leave_date = $request->leave_date;
         $item->save();
 
+        $mailData = Room::leftJoin('user','user.user_id','=','room.user_id')
+                        ->where('room.room_id',$id)
+                        ->first();
+
+        $mail = new MailController();
+
+        $userAdmins = \App\Models\User::whereIsAdmin(1)->get();
+        foreach($userAdmins as $user){
+            if($user->email != null)
+                $mail->send_mail_leave($user->email,$mailData);
+        }
+
         return response()->json(["message" => "Successful"],200);
     }
 
@@ -236,6 +263,5 @@ class ReservingRoomController extends Controller
 
         return response()->json(["message" => "Successful"],200);
     }
-
    
 }

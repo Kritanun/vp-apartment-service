@@ -9,6 +9,7 @@ use App\Http\Controllers\Controller as Controller;
 use PDF;
 use Storage;
 use Illuminate\Support\Facades\Auth;
+use App\Http\Controllers\MailController;
 
 class FeedBackController extends Controller
 {
@@ -55,6 +56,16 @@ class FeedBackController extends Controller
         $item->updated_by = $authUser->user_id;
 
         $item->save();
+
+        $mail = new MailController();
+
+        $userAdmins = \App\Models\User::whereIsAdmin(1)->get();
+
+        foreach($userAdmins as $user){
+            if($user->email != null)
+                $mail->send_mail_feedback($user->email,$item);
+        }
+        
 
         return response()->json($item,201);
     }

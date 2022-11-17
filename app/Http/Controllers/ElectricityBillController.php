@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\ElectricityBill;
 use App\Models\Room;
+use App\Http\Controllers\MailController;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller as Controller;
@@ -68,6 +69,14 @@ class ElectricityBillController extends Controller
 
         $item->save();
 
+        $mail = new MailController();
+
+        $user = \App\Models\User::find($room);
+
+        if($user && $user->email != null){
+            $mail->send_mail_bill($user->email,$this->export_by_id($item->electricity_bill_id));
+        }
+
         return response()->json($item,201);
     }
 
@@ -111,6 +120,47 @@ class ElectricityBillController extends Controller
 
 
         return response()->json(["message" => "Successful"],200);
+    }
+
+    public function export_by_id($id,)
+    {
+        $monthArr = [
+            "",
+            "มกราคม", 
+            "กุมภาพันธ์", 
+            "มีนาคม",
+            "เมษายน",
+            "พฤษภาคม",
+            "มิถุนายน",
+            "กรกฎาคม",
+            "สิงหาคม",
+            "กันยายน",
+            "ตุลาคม",
+            "พฤศจิกายน",
+            "ธันวาคม"];
+
+        $billData = ElectricityBill::find($id);
+
+        $roomData = Room::find($billData->room_id);
+
+        if(Date('m') != $billData->electricity_month || Date('Y') != $billData->electricity_year){
+            $roomData->outstanding_balance = 0;
+        }
+
+        $pdf = PDF::loadView('monthly_bill',
+            [
+                'bill_data' => $billData,
+                'room_data'=> $roomData,
+                'month'=> $monthArr[$billData->electricity_month],
+                "year" => intval($billData->electricity_year) + 543
+            ]);
+
+        Storage::disk('public')->put("/monthly_bill_{$billData->room_id}.pdf", $pdf->output());
+
+        // $file = storage_path("app/public/pdf/monthly_bill_{$billData->room_id}.pdf");
+
+        return "monthly_bill_{$billData->room_id}.pdf";
+
     }
 
     public function export(Request $request)

@@ -20,6 +20,8 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 Route::middleware(['cors:api'])->group( function (){
 
+    Route::get('/mail', 'MailController@test_mail');
+
     Route::get('/me', function(Request $request){
         
         return response()->json(["user" => $request->user()],200);
