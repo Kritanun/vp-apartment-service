@@ -24,7 +24,7 @@ class RoomController extends Controller
         $items = Room::where(function($query) use($request, $authUser) {
 
                     if($request->has('room_id')){
-                        $query->whereIn('room_id',$request->room_id);
+                        $query->where('room_id',$request->room_id);
                     }
 
                     if($authUser->is_admin == 0){
@@ -33,15 +33,15 @@ class RoomController extends Controller
                     }
 
                     if($request->has('building_name')){
-                        $query->whereIn('building_name',$request->building_name);
+                        $query->where('building_name',$request->building_name);
                     }
 
                     if($request->has('room_type')){
-                        $query->whereIn('room_type',$request->room_type);
+                        $query->where('room_type',$request->room_type);
                     }
 
                     if($request->has('rental_balance')){
-                        $query->whereIn('rental_balance',$request->rental_balance);
+                        $query->where('rental_balance',$request->rental_balance);
                     }
 
                 })->where('is_active',1)

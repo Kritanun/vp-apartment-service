@@ -42,6 +42,11 @@ class ImageController extends Controller
 
     public function store(Request $request)
     {
+        if( $request->has('room_id') || $request->has('other_service_id') || $request->has('location_id') || $request->has('reserv_bill')){
+
+        }else{
+            return response()->json(["error"=>"no id"],400);
+        }
         if($request->has('not_del_ids')){
             AttachFile::where(function($query) use($request){
                 if($request->has('room_id')){
