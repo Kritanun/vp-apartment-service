@@ -23,6 +23,7 @@ class FilterController extends Controller
         
         $items = Room::where('is_active',1)
                 ->where('effective_date','<=',date('Y-m-d'))
+                ->orderBy('room_no')
                 ->get(['room_id','room_no','room_status','building_name']);
 
         return response()->json($items,200);

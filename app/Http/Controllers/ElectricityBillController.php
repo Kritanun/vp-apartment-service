@@ -46,6 +46,7 @@ class ElectricityBillController extends Controller
                                     $query->whereIn('room.building_name',$request->building_name);
                                 }
                             })
+                            ->orderBy('room.room_no')
                             ->paginate($request->perPage, ['*'], 'page', $request->page);
 
         return response()->json($items,200);
@@ -83,12 +84,13 @@ class ElectricityBillController extends Controller
     public function update(Request $request, $id)
     {
         $item = ElectricityBill::find($id);
-
+        $room = Room::find($request->room_id);
         if(empty($item)){
             return response()->json(["message" => "Data not found"],404);
         }
 
         $item->fill($request->all());
+        $item->total = $room->rental_balance + $request->electricity_amount + $request->trash_amount + $request->water_amount;
         $item->created_by = $this->authUser;
         $item->updated_by = $this->authUser;
 
