@@ -195,6 +195,8 @@ class ReservingRoomController extends Controller
         $item->reserv_stay_in_date = null;
         if( $request->effective_date != null ){
             $item->effective_date = $request->effective_date;
+        }else{
+            $item->effective_date = date('Y-m-d');
         }
         
         // $item->user_id = null;
