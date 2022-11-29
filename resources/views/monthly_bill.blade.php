@@ -119,6 +119,11 @@
                 <td class="td-1">ค่าค้างชำระ</td>
                 <td class="td-2">{{$room_data->outstanding_balance}}</td>
             </tr>
+
+            <tr>
+                <td class="td-1">ส่วนลด</td>
+                <td class="td-2">{{$bill_data->discount}}</td>
+            </tr>
             
             <tr>
                 <td class="td-1"><b><u>รวม</u></b></td>
