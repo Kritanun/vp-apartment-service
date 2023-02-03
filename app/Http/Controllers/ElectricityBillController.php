@@ -64,7 +64,7 @@ class ElectricityBillController extends Controller
         $room = Room::find($request->room_id);
         $item = new ElectricityBill;
         $item->fill($request->all());
-        $item->total = $room->rental_balance + $request->electricity_amount + $request->trash_amount + $request->water_amount - $request->discount;
+        $item->total = $room->rental_balance + $request->electricity_amount + $request->trash_amount + $request->water_amount - $request->discount + $request->add_amount;
         $item->created_by = $this->authUser;
         $item->updated_by = $this->authUser;
 
@@ -75,7 +75,7 @@ class ElectricityBillController extends Controller
         $user = \App\Models\User::find($room->user_id);
 
         if($user && $user->email != null){
-            $mail->send_mail_bill($user->email,$this->export_by_id($item->electricity_bill_id));
+            // $mail->send_mail_bill($user->email,$this->export_by_id($item->electricity_bill_id));
         }
 
         return response()->json($item,201);
@@ -90,7 +90,7 @@ class ElectricityBillController extends Controller
         }
 
         $item->fill($request->all());
-        $item->total = $room->rental_balance + $request->electricity_amount + $request->trash_amount + $request->water_amount - $request->discount;
+        $item->total = $room->rental_balance + $request->electricity_amount + $request->trash_amount + $request->water_amount - $request->discount + $request->add_amount;
         $item->created_by = $this->authUser;
         $item->updated_by = $this->authUser;
 

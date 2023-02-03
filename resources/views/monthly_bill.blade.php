@@ -124,6 +124,11 @@
                 <td class="td-1">ส่วนลด</td>
                 <td class="td-2">{{$bill_data->discount}}</td>
             </tr>
+
+            <tr>
+                <td class="td-1">บริการเพิ่มเติม</td>
+                <td class="td-2">{{$bill_data->add_amount}}</td>
+            </tr>
             
             <tr>
                 <td class="td-1"><b><u>รวม</u></b></td>
