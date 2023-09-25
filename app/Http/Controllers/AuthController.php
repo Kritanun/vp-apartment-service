@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use App\Models\Room;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller as Controller;
@@ -62,6 +63,13 @@ class AuthController extends Controller
         $item->password = bcrypt($request->password);
 
         $item->save();
+
+        if( $request->has('room_id')){
+            $room = Room::find($request->room_id);
+            $room->user_id = $item->user_id;
+
+            $room->save();
+        }
 
         return response()->json($item,201);
     }

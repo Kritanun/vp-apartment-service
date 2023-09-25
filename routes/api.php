@@ -91,12 +91,13 @@ Route::middleware(['cors:api'])->group( function (){
     Route::patch('/reserving_room/change_room/{id}', 'ReservingRoomController@change_room');
 
     // Dropdown
-    Route::get('/dropdown/room', 'FilterController@getAllRoom');
-    Route::get('/dropdown/building', 'FilterController@getAllBuilding');
-    Route::get('/dropdown/room_type', 'FilterController@getRoomtype');
-    Route::get('/dropdown/balance_room', 'FilterController@getRentalRoomBalance');
-    Route::get('/dropdown/user', 'FilterController@getUserName');
-    Route::get('/dropdown/room_status', 'FilterController@getStatus');
+    Route::get('/dropdown/room', 'FilterController@getAllRoom')->middleware('auth:sanctum');
+    Route::get('/dropdown/room/available', 'FilterController@getAllRoomAvailable');
+    Route::get('/dropdown/building', 'FilterController@getAllBuilding')->middleware('auth:sanctum');
+    Route::get('/dropdown/room_type', 'FilterController@getRoomtype')->middleware('auth:sanctum');
+    Route::get('/dropdown/balance_room', 'FilterController@getRentalRoomBalance')->middleware('auth:sanctum');
+    Route::get('/dropdown/user', 'FilterController@getUserName')->middleware('auth:sanctum');
+    Route::get('/dropdown/room_status', 'FilterController@getStatus')->middleware('auth:sanctum');
 
     // Images
     Route::get('/upload_images', 'ImageController@index');

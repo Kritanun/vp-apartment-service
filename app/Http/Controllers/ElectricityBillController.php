@@ -47,6 +47,7 @@ class ElectricityBillController extends Controller
                                 }
                             })
                             ->orderBy('room.room_no')
+                            ->orderBy('electricity_bill.created_at', 'desc')
                             ->paginate($request->perPage, ['*'], 'page', $request->page);
 
         return response()->json($items,200);
